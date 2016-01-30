@@ -52,6 +52,10 @@ class Racer
     s.successful?
   end
 
+  def destroy
+    self.class.collection.find(_id: BSON.ObjectId(@id)).delete_one
+  end
+
   def initialize(params={})
     @id = params[:_id].nil? ? params[:id] : params[:_id].to_s
 
