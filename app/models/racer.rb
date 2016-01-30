@@ -1,4 +1,13 @@
 class Racer
+  include ActiveModel::Model
+
+  def persisted?
+    !!@id
+  end
+
+  def created_at; nil; end
+  def updated_at; nil; end
+
   COLUMNS = [:number, :first_name, :last_name, :gender, :group, :secs]
   COLUMN_TYPES = {number: Integer, secs: Integer}
 
