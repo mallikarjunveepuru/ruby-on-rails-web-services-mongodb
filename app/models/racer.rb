@@ -49,15 +49,22 @@ class Racer
 
     params.slice!(*COLUMNS)
 
-    s = self.class.collection.find(_id:BSON.ObjectId(@id)).update_one('$set': params)
+    # s = self.class.collection.find(_id:BSON.ObjectId(@id)).update_one('$set': params)
+    # if s.successful?
+    #   COLUMNS.each do |sym|
+    #     v = get_value(sym, params[sym])
+    #     instance_variable_set("@#{sym}".to_sym, v) if v
+    #   end
+    # end
 
-    if s.successful?
-      COLUMNS.each do |sym|
-        v = get_value(sym, params[sym])
-        instance_variable_set("@#{sym}".to_sym, v) if v
-      end
+    %i[first_name last_name gender group].each do |sym|
+      v = params.send(:[], sym)
+      instance_variable_set("@#{sym}".to_sym, v)
     end
+    @number = params[:number].to_i
+    @secs = params[:secs].to_i
 
+    s = self.class.collection.find(_id:BSON.ObjectId(@id)).update_one('$set': { number: @number, first_name: @first_name, last_name: @last_name, gender: @gender, group: @group, secs: @secs})
     s.successful?
   end
 
