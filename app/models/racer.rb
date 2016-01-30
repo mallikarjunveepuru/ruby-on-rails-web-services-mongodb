@@ -76,6 +76,18 @@ class Racer
     @secs = params[:secs].to_i
   end
 
+  def self.paginate(params)
+    page = (params[:page] || 1).to_i
+    per_page = (params[:per_page] || 30).to_i
+
+    records = all({}, {number: 1}, (page - 1) * per_page, per_page).map {|r| Racer.new(r)}
+    total = all.count
+
+    WillPaginate::Collection.create(page, per_page, total) do |pager|
+      pager.replace(records)
+    end
+  end
+
   private
   def get_value(sym, v)
     type = COLUMN_TYPES[sym]

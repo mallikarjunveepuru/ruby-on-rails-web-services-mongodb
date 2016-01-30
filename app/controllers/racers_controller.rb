@@ -2,7 +2,7 @@ class RacersController < ApplicationController
   before_action :set_racer, only: [:show, :edit, :update, :destroy]
 
   def index
-    @racers = Racer.all
+    @racers = Racer.paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def show
