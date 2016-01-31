@@ -9,6 +9,8 @@ class Place
     def find_by_short_name(short_name)
       collection.find({'address_components.short_name': short_name})
     end
+
+    def to_places(view); view.map {|e| Place.new(e)}; end
   end
 
 
