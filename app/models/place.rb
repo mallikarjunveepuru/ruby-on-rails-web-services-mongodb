@@ -5,6 +5,10 @@ class Place
     def mongo_client; Mongoid::Clients.default; end
     def collection; self.mongo_client[:places]; end
     def load_all(json_file); self.collection.insert_many JSON.parse(json_file.read); end
+
+    def find_by_short_name(short_name)
+      collection.find({'address_components.short_name': short_name})
+    end
   end
 
 
