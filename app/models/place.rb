@@ -12,18 +12,16 @@ class Place
 
     def to_places(view); view.map {|e| Place.new(e)}; end
 
-    def find(id)
-      doc = collection.find({_id: BSON.ObjectId(id)}).first
-      doc ? Place.new(doc) : doc
-    end
+    def find(id); doc = _find(id).first; doc ? Place.new(doc) : doc; end
 
     def all(offset = 0, limit = nil)
       v = collection.find.skip(offset)
       v = v.limit(limit) if limit
       to_places v
     end
-  end
 
+    def _find(id); collection.find({_id: BSON.ObjectId(id)}); end
+  end
 
   def initialize(params)
     @id = params[:_id].to_s
@@ -31,4 +29,6 @@ class Place
     @location = Point.new params[:geometry][:geolocation]
     @address_components = params[:address_components].map {|c| AddressComponent.new(c)}
   end
+
+  def destroy; Place._find(@id).delete_one; end
 end
