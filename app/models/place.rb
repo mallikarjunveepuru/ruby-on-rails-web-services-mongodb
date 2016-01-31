@@ -11,6 +11,10 @@ class Place
     end
 
     def to_places(view); view.map {|e| Place.new(e)}; end
+    def find(id)
+      doc = collection.find({_id: BSON.ObjectId(id)}).first
+      doc ? Place.new(doc) : doc
+    end
   end
 
 
