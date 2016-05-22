@@ -21,6 +21,17 @@ class Place
     end
 
     def _find(id); collection.find({_id: BSON.ObjectId(id)}); end
+
+    def get_address_components(sort = nil, offset = nil, limit = nil)
+      aggregation = []
+      aggregation << {:$project => {_id: 1, address_components: 1, formatted_address: 1, 'geometry.geolocation': 1} }
+      aggregation << {:$unwind => '$address_components'}
+      aggregation << {:$sort => sort} if sort
+      aggregation << {:$skip => offset} if offset
+      aggregation << {:$limit => limit} if limit
+
+      Place.collection.find.aggregate(aggregation)
+    end
   end
 
   def initialize(params)
