@@ -32,6 +32,18 @@ class Place
 
       Place.collection.find.aggregate(aggregation)
     end
+
+    def get_country_names
+      Place.collection.find.aggregate(
+          [
+              {'$project': {'address_components.long_name': 1, 'address_components.types': 1}},
+              {'$unwind': '$address_components'},
+              {'$match': {'address_components.types': 'country'}},
+              {'$group': {_id: '$address_components.long_name'} }
+          ]
+      ).to_a.map {|h| h[:_id] }
+    end
+
   end
 
   def initialize(params)

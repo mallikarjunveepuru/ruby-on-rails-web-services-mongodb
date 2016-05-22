@@ -104,6 +104,7 @@ feature "Module #3 Aggregation Framework Tests" do
         Place.collection.insert_one(new_rec)
         raw_ac_count.push(test_name)
         test_result = Place.get_country_names
+
         expect(test_result).to_not be_nil
         expect(test_result).to be_a Array
         expect(test_result.count).to eq raw_ac_count.count
