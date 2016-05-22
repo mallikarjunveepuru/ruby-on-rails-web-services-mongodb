@@ -44,6 +44,16 @@ class Place
       ).to_a.map {|h| h[:_id] }
     end
 
+    def find_ids_by_country_code(country_code)
+      Place.collection.find.aggregate(
+          [
+              {'$project': {'address_components.short_name': 1, 'address_components.types': 1, _id: 1}},
+              {'$unwind': '$address_components'},
+              {'$match': {'address_components.types': 'country', 'address_components.short_name': country_code}},
+              {'$group': {_id: '$_id'} }
+          ]
+      ).to_a.map {|h| h[:_id].to_s}
+    end
   end
 
   def initialize(params)
